@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>장고 북마크</title>
+</head>
+<body>
+
+<div id="content">
+
+    <hi>북마크 리스트</hi>
+
+    <ul>
+        {% for bookmark in object_list %}
+            <li><a href="{% url 'bookmark:detail' bookmark.id %}">{{ bookmark }}</a></li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+</body>
+</html>
