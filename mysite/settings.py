@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'taggit.apps.TaggitAppConfig',
     'taggit_templatetags2',
+    'photo.apps.PhotoConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
+
+DISQUS_SHORTNAME = 'pydjango-web-programming'
+DISQUS_MY_DOMAIN = 'http://192.168.56.101:8000'
