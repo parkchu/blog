@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+
+{% block title %}logged_out.html{% endblock %}
+
+{% block content %}
+
+    <h1>로그아웃</h1>
+    <br>
+
+    <div>
+        <i class="fas fa-quote-left"></i>
+        <span class="h6">&ensp;이 웹사이트에서 당신의 소중한 시간을 사용해주셔서 감사합니다.&ensp;</span>
+        <i class="fas fa-quote-right"></i>
+    </div>
+
+    <p class="font-italic"><a href="{% url 'login' %}">로그인</a></p>
+
+{% endblock %}
