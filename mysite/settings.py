@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'taggit_templatetags2',
     'widget_tweaks',
     'photo.apps.PhotoConfig',
+    'rest_framework',
+    'APIserver.apps.ApiserverConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -132,8 +136,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = '/'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
 
-DISQUS_SHORTNAME = 'pydjango-web-programming'
-DISQUS_MY_DOMAIN = 'http://192.168.56.101:8000'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
