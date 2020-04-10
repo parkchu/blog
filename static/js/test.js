@@ -4,6 +4,7 @@ const comment_input = comment_form.querySelector('input')
 const h5 = comment_div.querySelector(".js-h5")
 const APIURL = 'http://localhost:8000/comment/'
 const USER = comment_div.id
+const POST_ID = parseInt(comment_form.id)
 const URL = (window.location.href)
 URL.toString()
 console.log(URL)
@@ -21,6 +22,23 @@ function confirmChange(event){
     span.innerText = input.value
     span.classList.remove('block')
     a.classList.remove('block')
+    fetch(`http://localhost:8000/comment/${span.id}/`).then(function(res){
+        return res.json()
+    }).then(function(json){
+        fetch(`http://localhost:8000/comment/${span.id}/`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                user: json.user,
+                comment: input.value,
+                post_id: json.post_id,
+                created: json.created,
+                id: span.id
+            }),
+            headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+        })
+    })
 }
 
 function changeComment(event){
@@ -48,7 +66,7 @@ function delComment(event){
     const div = a.parentNode
     const span = div.querySelector(".comment")
     comment_div.removeChild(div)
-    fetch(`http://localhost:8000/comment/${span.innerText}/`, {
+    fetch(`http://localhost:8000/comment/${span.id}/`, {
         method: 'DELETE'
     })
 }
@@ -70,16 +88,10 @@ function addComment(current_comment){
     p.innerText = `${USER}: `
     p2.innerText = current_comment
     p2.classList.add("comment")
-    div.appendChild(p)
-    div.appendChild(p2)
-    div.appendChild(br)
-    div.appendChild(a)
-    div.appendChild(a2)
-    comment_div.appendChild(div)
     const commentObj = {
         user: USER,
         comment: current_comment,
-        url: URL
+        post_id: POST_ID
     }
     console.log(commentObj)
     fetch(APIURL, {
@@ -88,10 +100,20 @@ function addComment(current_comment){
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
+    }).then(function(res){
+        return res.json()
+    }).then(function(json){
+        p2.id = json.id
     })
+    div.appendChild(p)
+    div.appendChild(p2)
+    div.appendChild(br)
+    div.appendChild(a)
+    div.appendChild(a2)
+    comment_div.insertBefore(div, comment_div.childNodes[6])
 }
 
-function loadComment(text, user){
+function loadComment(text, user, id){
     const div = document.createElement('div')
     const a = document.createElement('a')
     const a2 = document.createElement('a')
@@ -101,6 +123,7 @@ function loadComment(text, user){
     p.innerText = `${user}: `
     p2.innerText = text
     p2.classList.add("comment")
+    p2.id = id
     a.innerText = '수정 '
     a.href = '#/'
     a.classList.add('change')
@@ -145,19 +168,24 @@ function loginWhether(user){
 }
 
 function init(){
-    const postComment = comment.filter(function(obj){
-        return obj.url === URL
+
+    comment.forEach(function(obj){
+        loadComment(obj.comment, obj.user, obj.id)
     })
-    postComment.forEach(function(obj){
-        loadComment(obj.comment, obj.user)
-    })
+
+
     loginWhether(USER)
     comment_form.addEventListener("submit", handleSubmit)
 }
 
-fetch(APIURL).then(function(json){
+fetch(`http://localhost:8000/comment/filter/${POST_ID}/`).then(function(json){
     return json.json()
 }).then(function(obj){
     comment = obj
+    console.log(comment)
+    comment.sort(function(a, b){
+        return a.created > b.created ? -1 : a.created < b.created ? 1 : 0
+    })
+    console.log(POST_ID)
     init()
 })

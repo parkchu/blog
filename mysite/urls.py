@@ -32,6 +32,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('photo/', include('photo.urls')),
     path('comment/', views.comment_list),
-    path('comment/<str:comment>/', views.comment),
+    path('comment/<int:pk>/', views.comment),
+    path('comment/filter/<int:pk>/', views.filtercomment),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
